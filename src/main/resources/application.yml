@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: robotlife-gateway
+
+---
+server:
+  port: 8010
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}}
+
+    lease-renewal-interval-in-seconds: 3
+    lease-expiration-duration-in-seconds: 7
+  client:
+    serviceUrl:
+      defaultZone: http://liuyang19900520:123456@localhost:8761/eureka/
+
+zuul:
+  routes:
+    users:
+      path: /users/**
+      serviceId: robotlife-user
+    blogs:
+      path: /blogs/**
+      serviceId: robotlife-blog
+    auth:
+      path: /auth/**
+      serviceId: robotlife-auth
+  retryable: true
+  sensitive-headers:
+
+ribbon:
+  MaxAutoRetries: 2
+  MaxAutoRetriesNextServer: 0
